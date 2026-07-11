@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct plopplopApp: App {
+    @State private var manager = MultipeerManager()
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(manager)
         }
     }
 }

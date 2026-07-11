@@ -1,4 +1,4 @@
-//
+ //
 //  ContentView.swift
 //  plopplop
 //
@@ -9,16 +9,26 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        TabView {
+            SendView()
+                .tabItem {
+                    Label(
+                        "Send",
+                        systemImage: "paperplane"
+                    )
+                }
+            ReceiveView()
+                .tabItem {
+                    Label(
+                        "Receive",
+                        systemImage: "tray"
+                    )
+                }
         }
-        .padding()
-    }
-}
 
+    }
+
+}
 #Preview {
     ContentView()
 }
