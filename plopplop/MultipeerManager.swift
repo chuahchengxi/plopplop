@@ -87,6 +87,13 @@ class MultipeerManager: NSObject, ObservableObject {
         }
         
     }
+    var isConnected: Bool {
+        !session.connectedPeers.isEmpty
+    }
+
+    var connectedDeviceNames: [String] {
+        session.connectedPeers.map(\.displayName)
+    }
     
 }
 extension MultipeerManager: MCSessionDelegate,

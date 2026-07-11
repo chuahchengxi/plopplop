@@ -6,8 +6,8 @@
 //
 
 import SwiftUI
-
 struct ContentView: View {
+    @State private var manager = MultipeerManager()
     var body: some View {
         TabView {
             SendView()
