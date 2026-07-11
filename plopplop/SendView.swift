@@ -16,24 +16,6 @@ struct SendView: View {
     @FocusState private var focusedField: Field?
     var body: some View {
         NavigationStack {
-            Section("Connection") {
-
-                if manager.connectedPeers.isEmpty {
-
-                    Label("No device connected", systemImage: "wifi.slash")
-                        .foregroundStyle(.red)
-
-                } else {
-
-                    ForEach(manager.connectedPeers, id: \.self) { peer in
-
-                        Label(peer.displayName, systemImage: "iphone")
-
-                    }
-
-                }
-
-            }
             Form {
                 Section("Note") {
                     TextField("Title", text: $title)
