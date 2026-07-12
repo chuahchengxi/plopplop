@@ -10,15 +10,9 @@ import SwiftUI
 
 struct ConnectionRequestSheet: View {
 
-    // MARK: - Environment
+    @Environment(\.dismiss) private var dismiss
 
-    @Environment(\.dismiss)
-    private var dismiss
-
-    @EnvironmentObject
-    private var peerManager: PeerManager
-
-    // MARK: - Body
+    @EnvironmentObject private var peerManager: PeerManager
 
     var body: some View {
 
@@ -51,8 +45,6 @@ struct ConnectionRequestSheet: View {
     }
 
 }
-
-// MARK: - View Builder
 
 private extension ConnectionRequestSheet {
 
