@@ -19,12 +19,31 @@ struct ContentView: View {
         NavigationStack {
             ZStack(alignment: .bottom) {
                 List {
-                    connectionSection
-                    nearbySection
-                    connectedSection
+                    Section("Connections") {
+                        connectionSection
+                        nearbySection
+                        connectedSection
+                    }
                     
+                    Section("Notes") {
+                        Button {
+                            showingReceiveView = true
+                        } label: {
+                            HStack {
+                                Label(
+                                    "Received Notes",
+                                    systemImage: "tray.full.fill"
+                                )
+                                Spacer()
+                                Text("\(notesStore.notes.count)")
+                                    .foregroundStyle(.secondary)
+                                Image(systemName: "chevron.right")
+                                    .foregroundStyle(.tertiary)
+                            }
+                        }
+                    }
                 }
-                floatingButtons
+                floatingButton
             }
             .navigationTitle("plopplop")
             .toolbar {
@@ -109,7 +128,7 @@ private extension ContentView {
     
     var connectionSection: some View {
         
-        Section("Connection") {
+        Section() {
             
             HStack {
                 
@@ -142,7 +161,7 @@ private extension ContentView {
     
     var nearbySection: some View {
         
-        Section("Nearby Devices") {
+        Section() {
             
             if peerManager.nearbyPeers.isEmpty {
                 
@@ -186,7 +205,7 @@ private extension ContentView {
     
     var connectedSection: some View {
         
-        Section("Connected Devices") {
+        Section() {
             
             if peerManager.connectedPeers.isEmpty {
                 
@@ -210,11 +229,38 @@ private extension ContentView {
         }
         
     }
-    
+    var receivedNotesSection: some View {
+        
+        Section("Received Notes") {
+            
+            Button {
+                
+                showingReceiveView = true
+                
+            } label: {
+                HStack {
 
+                    Label("View Received Notes", systemImage: "tray.full.fill")
 
+                    Spacer()
 
+                    Text("\(notesStore.notes.count)")
+                        .foregroundStyle(.secondary)
+
+                    Image(systemName: "chevron.right")
+                        .foregroundStyle(.tertiary)
+                }
+                
+            }
+            
+        }
+        
     }
+    
+}
+
+
+
 private extension ContentView {
     @ViewBuilder
     func actionButton(
@@ -224,76 +270,56 @@ private extension ContentView {
         disabled: Bool = false,
         action: @escaping () -> Void
     ) -> some View {
-
+        
         Button(action: action) {
-
+            
             HStack(spacing: 14) {
-
+                
                 Image(systemName: systemImage)
                     .font(.title3)
                     .foregroundStyle(disabled ? .gray : tint)
                     .frame(width: 26)
-
+                
                 Text(title)
                     .font(.headline)
                     .foregroundStyle(disabled ? .gray : tint)
-
+                
                 Spacer()
-
+                
                 Image(systemName: "chevron.right")
                     .font(.caption)
                     .foregroundStyle(.tertiary)
-
+                
             }
             .padding(.horizontal, 18)
             .padding(.vertical, 18)
-
+            
         }
         .disabled(disabled)
-
+        
     }
-
+    
 }
 private extension ContentView {
-    var floatingButtons: some View {
-        HStack {
-            Button {
-
-                showingReceiveView = true
-
-            } label: {
-                Image(systemName: "tray.full.fill")
-                    .font(.title2.weight(.semibold))
-                    .foregroundStyle(.white)
-                    .frame(width: 62, height: 62)
-                    .background(Color.accentColor)
-                    .clipShape(Circle())
-                    .shadow(radius: 8)            }
-            Spacer()
-
-            Button {
-
-                showingSendView = true
-
-            } label: {
-                Image(systemName: "square.and.pencil")
-                    .font(.title2.weight(.semibold))
-                    .foregroundStyle(.white)
-                    .frame(width: 62, height: 62)
-                    .background(Color.accentColor)
-                    .clipShape(Circle())
-                    .shadow(radius: 8)
+    var floatingButton: some View {
+        VStack(spacing: 16) {
+            HStack {
+                Spacer()
+                Button {
+                    showingSendView = true
+                } label: {
+                    Image(systemName: "square.and.pencil")
+                        .font(.title2.weight(.bold))
+                        .frame(width: 62, height: 62)
+                }
+                .buttonStyle(.glassProminent)
+                .disabled(!peerManager.isConnected)
             }
-            .disabled(!peerManager.isConnected)
-
         }
-        .padding(.horizontal, 28)
+        .padding(.horizontal)
         .padding(.bottom, 20)
-
     }
-
 }
-
 private extension ContentView {
     
     var nicknameSetupSheet: some View {
