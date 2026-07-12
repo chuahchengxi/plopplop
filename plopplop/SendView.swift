@@ -8,107 +8,222 @@ import SwiftUI
 import MultipeerConnectivity
 
 struct SendView: View {
-    private enum Field: Int, CaseIterable {
-        case title, content}
-    @EnvironmentObject var manager: MultipeerManager
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var peerManager: PeerManager
+    @EnvironmentObject private var settings: DeviceSettings
     @State private var title = ""
     @State private var content = ""
     @FocusState private var focusedField: Field?
+    @State private var showingValidationAlert = false
+    @State private var validationMessage = ""
+    private enum Field {
+        case title
+        case content
+    }
     var body: some View {
         NavigationStack {
             Form {
-                Section("Nearby Devices") {
-                    
-                    if manager.discoveredPeers.isEmpty {
-                        
-                        Text("Searching...")
-                        
-                    } else {
-                        
-                        ForEach(manager.discoveredPeers, id: \.self) { peer in
-                            
-                            HStack {
-                                
-                                VStack(alignment: .leading) {
-                                    
-                                    Text(peer.displayName)
-                                    
-                                }
-                                
-                                Spacer()
-                                
-                                Button("Connect") {
-                                    
-                                    if !manager.connectedPeers.contains(peer) {
-                                        
-                                        manager.connect(to: peer)
-                                    }
-                                }
-                                
-                            }
-                            
-                        }
-                        
-                    }
-                    
-                }
-                Section("Connected") {
-                    
-                    if manager.connectedPeers.isEmpty {
-                        
-                        Text("Not connected")
-                        
-                    } else {
-                        
-                        ForEach(manager.connectedPeers, id: \.self) { peer in
-                            
-                            Label(peer.displayName, systemImage: "checkmark.circle.fill")
-                            
-                        }
-                        
-                    }
-                    
-                }
-                Section("Note") {
-                    TextField("Title", text: $title)
-                        .focused($focusedField, equals: .title)
-                    TextField(
-                        "Write your note...",
-                        text: $content,
-                        axis: .vertical
-                    )
-                    .lineLimit(6...12)
-                    .focused($focusedField, equals: .content)
-                }
-                Section {
-                    Button("Send Note") {
-                        guard !title.isEmpty,
-                              !content.isEmpty else {
-                            return
-                        }
-                        let note = Note(
-                            id: UUID(),
-                            title: title,
-                            content: content,
-                            dateCreated: Date()
-                        )
-                        
-                        manager.send(note: note)
-                        
-                        title = ""
-                        content = ""
-                    }
-                    .disabled(manager.connectedPeers.isEmpty)
-                }
+                noteSection
+                connectionSection
             }
-            .navigationTitle("Share Note")
+            .navigationTitle("New Note")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .automatic) {
-                    Button("Done") {
-                        focusedField = nil
+                
+                ToolbarItem(placement: .topBarLeading) {
+                    
+                    Button("Cancel") {
+                        
+                        dismiss()
+                        
                     }
+                    
                 }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    
+                    Button("Send") {
+                        
+                        sendNote()
+                        
+                    }
+                    .disabled(!canSend)
+                    
+                }
+                
             }
+            .alert(
+                "Unable to Send",
+                isPresented: $showingValidationAlert
+            ) {
+                
+                Button("OK") { }
+                
+            } message: {
+                
+                Text(validationMessage)
+                
+            }
+            
         }
+        
     }
+    
+}
+
+private extension SendView {
+    
+    var noteSection: some View {
+        
+        Section("Note") {
+            
+            TextField(
+                "Title",
+                text: $title
+            )
+            .focused(
+                $focusedField,
+                equals: .title
+            )
+            
+            TextField(
+                "Content",
+                text: $content,
+                axis: .vertical
+            )
+            .lineLimit(
+                8,
+                reservesSpace: true
+            )
+            .focused(
+                $focusedField,
+                equals: .content
+            )
+            
+        }
+        
+    }
+    
+}
+
+private extension SendView {
+    
+    var connectionSection: some View {
+        
+        Section("Connection") {
+            
+            HStack {
+                
+                Text("Connected Devices")
+                
+                Spacer()
+                
+                Text(
+                    "\(peerManager.peerCount)"
+                )
+                .foregroundStyle(.secondary)
+                
+            }
+            
+            if peerManager.connectedPeers.isEmpty {
+                
+                Label(
+                    "No connected devices",
+                    systemImage: "wifi.slash"
+                )
+                .foregroundStyle(.secondary)
+                
+            } else {
+                
+                ForEach(
+                    peerManager.connectedPeers,
+                    id: \.self
+                ) { peer in
+                    
+                    Label(
+                        peer.displayName,
+                        systemImage: "checkmark.circle.fill"
+                    )
+                    .foregroundStyle(.green)
+                    
+                }
+                
+            }
+            
+        }
+        
+    }
+    
+}
+
+private extension SendView {
+    
+    var canSend: Bool {
+        
+        peerManager.isConnected &&
+        !title.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        ).isEmpty &&
+        !content.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        ).isEmpty
+        
+    }
+    
+    func sendNote() {
+        
+        let trimmedTitle = title
+            .trimmingCharacters(
+                in: .whitespacesAndNewlines
+            )
+        
+        let trimmedContent = content
+            .trimmingCharacters(
+                in: .whitespacesAndNewlines
+            )
+        
+        guard !trimmedTitle.isEmpty else {
+            
+            validationMessage = "Please enter a title."
+            
+            showingValidationAlert = true
+            
+            return
+            
+        }
+        
+        guard !trimmedContent.isEmpty else {
+            
+            validationMessage = "Please enter some content."
+            
+            showingValidationAlert = true
+            
+            return
+            
+        }
+        
+        guard peerManager.isConnected else {
+            
+            validationMessage = "Connect to another device before sending a note."
+            
+            showingValidationAlert = true
+            
+            return
+            
+        }
+        
+        let note = Note(
+            title: trimmedTitle,
+            content: trimmedContent,
+            senderName: settings.nickname
+        )
+        
+        peerManager.send(
+            note: note
+        )
+        
+        dismiss()
+        
+    }
+    
 }

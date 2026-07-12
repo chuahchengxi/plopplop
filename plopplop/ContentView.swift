@@ -7,7 +7,7 @@
 
 import SwiftUI
 struct ContentView: View {
-    @State private var manager = MultipeerManager()
+    @State private var manager = PeerManager()
     var body: some View {
         TabView {
             SendView()
