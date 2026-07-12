@@ -287,7 +287,9 @@ final class PeerManager: NSObject, ObservableObject {
         }
         
     }
-    
+    func clearError() {
+        lastError = nil
+    }
 }
 
 //Different Helpers
@@ -693,16 +695,28 @@ extension PeerManager {
     
     func disconnectAndReset() {
         
-        sendDisconnect()
+        invitationTimeoutTask?.cancel()
+        
+        incomingRequest = nil
+        showingConnectionRequest = false
+        
+        session.disconnect()
         
         connectedPeers.removeAll()
         
+        nearbyPeers.removeAll()
+        
         connectionStatus = "Not Connected"
         
-        rebuildSessionIfNeeded()
+        stopAdvertising()
+        stopBrowsing()
+        
+        configureSession()
+        
+        startAdvertising()
+        startBrowsing()
         
     }
-    
 }
 //Restart Advertising and Browsing
 
