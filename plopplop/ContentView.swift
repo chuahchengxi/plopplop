@@ -17,11 +17,14 @@ struct ContentView: View {
     @State private var nickname = ""
     var body: some View {
         NavigationStack {
-            List {
-                connectionSection
-                nearbySection
-                connectedSection
-                actionsSection
+            ZStack(alignment: .bottom) {
+                List {
+                    connectionSection
+                    nearbySection
+                    connectedSection
+                    
+                }
+                floatingButtons
             }
             .navigationTitle("plopplop")
             .toolbar {
@@ -209,67 +212,7 @@ private extension ContentView {
     }
     
 
-        var actionsSection: some View {
 
-            Section {
-
-                VStack(spacing: 0) {
-
-                    actionButton(
-                        title: "New Note",
-                        systemImage: "square.and.pencil",
-                        tint: .accentColor,
-                        disabled: !peerManager.isConnected
-                    ) {
-
-                        showingSendView = true
-
-                    }
-
-                    Divider()
-                        .padding(.leading, 55)
-
-                    actionButton(
-                        title: "Received Notes",
-                        systemImage: "tray.full",
-                        tint: .accentColor
-                    ) {
-
-                        showingReceiveView = true
-
-                    }
-
-                    Divider()
-                        .padding(.leading, 55)
-
-                    actionButton(
-                        title: "Disconnect",
-                        systemImage: "wifi.slash",
-                        tint: .red,
-                        disabled: !peerManager.isConnected
-                    ) {
-
-                        peerManager.disconnectAndReset()
-
-                    }
-
-                }
-                .background(.regularMaterial)
-                .clipShape(RoundedRectangle(cornerRadius: 22))
-
-            }
-            .listRowInsets(
-                EdgeInsets(
-                    top: 8,
-                    leading: 0,
-                    bottom: 8,
-                    trailing: 0
-                )
-            )
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
-
-        }
 
     }
 private extension ContentView {
@@ -307,6 +250,45 @@ private extension ContentView {
 
         }
         .disabled(disabled)
+
+    }
+
+}
+private extension ContentView {
+    var floatingButtons: some View {
+        HStack {
+            Button {
+
+                showingReceiveView = true
+
+            } label: {
+                Image(systemName: "tray.full.fill")
+                    .font(.title2.weight(.semibold))
+                    .foregroundStyle(.white)
+                    .frame(width: 62, height: 62)
+                    .background(Color.accentColor)
+                    .clipShape(Circle())
+                    .shadow(radius: 8)            }
+            Spacer()
+
+            Button {
+
+                showingSendView = true
+
+            } label: {
+                Image(systemName: "square.and.pencil")
+                    .font(.title2.weight(.semibold))
+                    .foregroundStyle(.white)
+                    .frame(width: 62, height: 62)
+                    .background(Color.accentColor)
+                    .clipShape(Circle())
+                    .shadow(radius: 8)
+            }
+            .disabled(!peerManager.isConnected)
+
+        }
+        .padding(.horizontal, 28)
+        .padding(.bottom, 20)
 
     }
 
