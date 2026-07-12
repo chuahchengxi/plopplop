@@ -90,9 +90,19 @@ class MultipeerManager: NSObject, ObservableObject {
     var isConnected: Bool {
         !session.connectedPeers.isEmpty
     }
-
+    
     var connectedDeviceNames: [String] {
         session.connectedPeers.map(\.displayName)
+    }
+    func connect(to peer: MCPeerID) {
+
+        browser.invitePeer(
+            peer,
+            to: session,
+            withContext: nil,
+            timeout: 20
+        )
+
     }
     
 }
@@ -180,20 +190,28 @@ extension MultipeerManager: MCSessionDelegate,
                  foundPeer peerID: MCPeerID,
                  withDiscoveryInfo info: [String : String]?) {
         
-    }
-    
-    func browser(_ browser: MCNearbyServiceBrowser,
-                 lostPeer peerID: MCPeerID) {
-        
-        DispatchQueue.main.async {
+        if !discoveredPeers.contains(peerID) {
             
-            self.discoveredPeers.removeAll {
+            DispatchQueue.main.async {
                 
-                $0 == peerID
+                self.discoveredPeers.append(peerID)
                 
             }
             
         }
-        
+    }
+    func browser(_ browser: MCNearbyServiceBrowser,
+                 lostPeer peerID: MCPeerID) {
+
+        DispatchQueue.main.async {
+
+            self.discoveredPeers.removeAll {
+
+                $0 == peerID
+
+            }
+
+        }
+
     }
 }

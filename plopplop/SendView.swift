@@ -17,6 +17,58 @@ struct SendView: View {
     var body: some View {
         NavigationStack {
             Form {
+                Section("Nearby Devices") {
+                    
+                    if manager.discoveredPeers.isEmpty {
+                        
+                        Text("Searching...")
+                        
+                    } else {
+                        
+                        ForEach(manager.discoveredPeers, id: \.self) { peer in
+                            
+                            HStack {
+                                
+                                VStack(alignment: .leading) {
+                                    
+                                    Text(peer.displayName)
+                                    
+                                }
+                                
+                                Spacer()
+                                
+                                Button("Connect") {
+                                    
+                                    if !manager.connectedPeers.contains(peer) {
+                                        
+                                        manager.connect(to: peer)
+                                    }
+                                }
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                }
+                Section("Connected") {
+                    
+                    if manager.connectedPeers.isEmpty {
+                        
+                        Text("Not connected")
+                        
+                    } else {
+                        
+                        ForEach(manager.connectedPeers, id: \.self) { peer in
+                            
+                            Label(peer.displayName, systemImage: "checkmark.circle.fill")
+                            
+                        }
+                        
+                    }
+                    
+                }
                 Section("Note") {
                     TextField("Title", text: $title)
                         .focused($focusedField, equals: .title)
