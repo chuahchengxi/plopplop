@@ -15,6 +15,8 @@ struct plopplopApp: App {
     private var notesStore = NotesStore()
     @StateObject
     private var peerManager: PeerManager
+    @StateObject
+    private var draftStore = DraftStore()
 //Initialise the settings
 
     init() {
@@ -44,10 +46,11 @@ struct plopplopApp: App {
 
         WindowGroup {
 
-            ContentView()
+            RootTabView()
                 .environmentObject(deviceSettings)
                 .environmentObject(notesStore)
                 .environmentObject(peerManager)
+                .environmentObject(draftStore)
 
         }
 

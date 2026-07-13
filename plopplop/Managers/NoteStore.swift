@@ -51,6 +51,18 @@ final class NotesStore: ObservableObject {
         saveNotes()
         
     }
+    //Toggled
+    func togglePinned(_ note: Note) {
+
+        guard let index = notes.firstIndex(where: { $0.id == note.id }) else {
+            return
+        }
+
+        notes[index].isPinned.toggle()
+
+        saveNotes()
+
+    }
     //Add multiple notes and the UUID does not duplicate.
     func add(contentsOf newNotes: [Note]) {
         
@@ -121,11 +133,19 @@ final class NotesStore: ObservableObject {
     }
     //Always sort notes by first created
     private func sortNotes() {
-        
+
         notes.sort {
-            $0.createdAt > $1.createdAt
+
+            if $0.isPinned != $1.isPinned {
+
+                return $0.isPinned
+
+            }
+
+            return $0.createdAt > $1.createdAt
+
         }
-        
+
     }
     //save to Documents
     private func saveNotes() {

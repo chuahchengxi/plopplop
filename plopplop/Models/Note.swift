@@ -10,18 +10,21 @@ struct Note: Identifiable, Codable, Equatable {
     var title: String
     var content: String
     var senderName: String
+    var isPinned: Bool
     var createdAt: Date
     init(
         id: UUID = UUID(),
         title: String,
         content: String,
         senderName: String,
+        isPinned: Bool = false,
         createdAt: Date = Date()
     ) {
         self.id = id
         self.title = title
         self.content = content
         self.senderName = senderName
+        self.isPinned = isPinned
         self.createdAt = createdAt
     }
 

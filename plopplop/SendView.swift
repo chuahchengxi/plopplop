@@ -11,6 +11,7 @@ struct SendView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var peerManager: PeerManager
     @EnvironmentObject private var settings: DeviceSettings
+    @EnvironmentObject private var draftStore: DraftStore
     @State private var title = ""
     @State private var content = ""
     @FocusState private var focusedField: Field?
@@ -66,7 +67,30 @@ struct SendView: View {
             }
             
         }
-        
+        .onAppear {
+
+            let draft = draftStore.restore()
+
+            title = draft.title
+            content = draft.content
+
+        }
+        .onChange(of: title) { _, _ in
+
+            draftStore.update(
+                title: title,
+                content: content
+            )
+
+        }
+        .onChange(of: content) { _, _ in
+
+            draftStore.update(
+                title: title,
+                content: content
+            )
+
+        }
     }
     
 }
@@ -218,12 +242,14 @@ private extension SendView {
             senderName: settings.nickname
         )
         
-        peerManager.send(
-            note: note
-        )
-        
+        peerManager.send(note:note)
+
+        draftStore.clear()
+
+        title = ""
+        content = ""
+
         dismiss()
-        
     }
     
 }
