@@ -510,10 +510,6 @@ extension PeerManager: MCSessionDelegate {
 
                 if self.connectedPeers.isEmpty {
                     self.connectionStatus = "Not Connected"
-
-                    // Reset pairing state
-                    self.currentPairingCode = nil
-                    self.isWaitingForPairing = false
                 }
                 
             @unknown default:
@@ -650,17 +646,13 @@ extension PeerManager {
     }
     
     func sendDisconnect() {
-        
-        sendPacket(
-            Date(),
-            type: .disconnect
-        )
-        
-        disconnect()
+
+        disconnectAndReset()
+
+    }
         
     }
     
-}
 //Convenience
 
 extension PeerManager {
@@ -704,29 +696,31 @@ private extension PeerManager {
 
 extension PeerManager {
     
+    
     func disconnectAndReset() {
-        
+
         invitationTimeoutTask?.cancel()
-        
+
         incomingRequest = nil
         showingConnectionRequest = false
-        
+
+        currentPairingCode = nil
+        isWaitingForPairing = false
+
         session.disconnect()
-        
+
         connectedPeers.removeAll()
-        
         nearbyPeers.removeAll()
-        
-        connectionStatus = "Not Connected"
-        
+
         stopAdvertising()
         stopBrowsing()
-        
+
         configureSession()
-        
+
         startAdvertising()
         startBrowsing()
-        
+
+        connectionStatus = "Not Connected"
     }
 }
 //Restart Advertising and Browsing

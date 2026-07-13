@@ -30,11 +30,10 @@ struct SettingsView: View {
                 connectionStatusSection
 
                 nearbyDevicesSection
+                pairingSection
 
                 connectedDevicesSection
                 
-                pairingSection
-
                 disconnectSection
 
             }
@@ -44,12 +43,16 @@ struct SettingsView: View {
                 nickname = settings.nickname
 
             }
-            .onTapGesture {
+            .scrollDismissesKeyboard(.interactively)
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
 
-                nicknameFocused = false
-
-            } 
-
+                    Button("Done") {
+                        nicknameFocused = false
+                    }
+                }
+            }
         }
 
     }
@@ -72,6 +75,10 @@ private extension SettingsView {
 
             Button("Save Nickname") {
 
+                nicknameFocused = false
+
+                print("🔥 Button pressed")
+
                 saveNickname()
 
             }
@@ -82,21 +89,26 @@ private extension SettingsView {
 
     func saveNickname() {
 
+        print("1️⃣ saveNickname() called")
+
         let trimmed = nickname
-            .trimmingCharacters(
-                in: .whitespacesAndNewlines
-            )
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        print("2️⃣ Trimmed:", trimmed)
 
         guard !trimmed.isEmpty else {
+            print("❌ Empty nickname")
             return
         }
 
         settings.saveNickname(trimmed)
 
+        print("3️⃣ settings.nickname =", settings.nickname)
+
         peerManager.refreshNickname()
 
+        print("4️⃣ refreshNickname() finished")
     }
-
 }
 private extension SettingsView {
 
@@ -292,7 +304,7 @@ private extension SettingsView {
             .disabled(
                 !peerManager.isConnected
             )
-
+            .disabled(peerManager.connectionStatus == "Disconnecting...")
         }
 
     }
