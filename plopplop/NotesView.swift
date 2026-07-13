@@ -232,7 +232,6 @@ private extension NotesView {
 
             }
             .buttonStyle(.glassProminent)
-            .disabled(!peerManager.isConnected)
 
         }
         .padding(.trailing, 20)

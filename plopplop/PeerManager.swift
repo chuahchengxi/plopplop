@@ -25,6 +25,8 @@ final class PeerManager: NSObject, ObservableObject {
     @Published private(set) var lastError: String?
     @Published private(set) var connectionStatus: String = "Not Connected"
     @Published var showingConnectionRequest = false
+    @Published var currentPairingCode: String?
+    @Published var isWaitingForPairing = false
     private var invitationTimeoutTask: Task<Void, Never>?
     init(
         settings: DeviceSettings,
@@ -107,7 +109,7 @@ final class PeerManager: NSObject, ObservableObject {
         advertiser?.delegate = self
         
         advertiser?.startAdvertisingPeer()
-        
+        print("✅ Advertising started")
         isAdvertising = true
         
     }
@@ -147,7 +149,7 @@ final class PeerManager: NSObject, ObservableObject {
         browser?.stopBrowsingForPeers()
         
         browser = nil
-        
+        print("✅ Browsing started")
         nearbyPeers.removeAll()
         
         isBrowsing = false
@@ -188,7 +190,10 @@ final class PeerManager: NSObject, ObservableObject {
     ) {
         
         let code = Self.generatePairingCode()
-        
+
+        currentPairingCode = code
+        isWaitingForPairing = true
+
         let context = InvitationContext(
             nickname: settings.nickname,
             pairingCode: code
@@ -372,13 +377,11 @@ extension PeerManager: MCNearbyServiceBrowserDelegate {
         foundPeer peerID: MCPeerID,
         withDiscoveryInfo info: [String : String]?
     ) {
-        
+        print("✅ FOUND:", peerID.displayName)
+
         Task { @MainActor in
-            
             self.addNearbyPeer(peerID)
-            
         }
-        
     }
     
     nonisolated func browser(
@@ -484,25 +487,33 @@ extension PeerManager: MCSessionDelegate {
             switch state {
                 
             case .connected:
-                
+
                 if !self.connectedPeers.contains(peerID) {
                     self.connectedPeers.append(peerID)
                 }
-                
+
                 self.connectionStatus = "Connected"
+
+                // Pairing finished successfully
+                self.currentPairingCode = nil
+                self.isWaitingForPairing = false
                 
             case .connecting:
                 
                 self.connectionStatus = "Connecting..."
                 
             case .notConnected:
-                
+
                 self.connectedPeers.removeAll {
                     $0 == peerID
                 }
-                
+
                 if self.connectedPeers.isEmpty {
                     self.connectionStatus = "Not Connected"
+
+                    // Reset pairing state
+                    self.currentPairingCode = nil
+                    self.isWaitingForPairing = false
                 }
                 
             @unknown default:

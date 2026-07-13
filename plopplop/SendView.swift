@@ -75,6 +75,23 @@ struct SendView: View {
             content = draft.content
 
         }
+        .onChange(of: title) { _, newValue in
+
+            draftStore.update(
+                title: newValue,
+                content: content
+            )
+
+        }
+
+        .onChange(of: content) { _, newValue in
+
+            draftStore.update(
+                title: title,
+                content: newValue
+            )
+
+        }
         .onChange(of: title) { _, _ in
 
             draftStore.update(

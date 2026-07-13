@@ -9,10 +9,11 @@
 import SwiftUI
 
 struct ConnectionRequestSheet: View {
-
     @Environment(\.dismiss) private var dismiss
-
     @EnvironmentObject private var peerManager: PeerManager
+    @State private var enteredCode = ""
+
+    @State private var incorrectCode = false
 
     var body: some View {
 
@@ -72,27 +73,31 @@ private extension ConnectionRequestSheet {
                     .multilineTextAlignment(.center)
 
             }
-
             VStack(spacing: 12) {
 
-                Text("Verification Code")
+                Text("Enter Verification Code")
                     .font(.headline)
 
-                Text(request.pairingCode)
-                    .font(.system(
-                        size: 40,
-                        weight: .bold,
-                        design: .monospaced
-                    ))
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 12)
-                    .background(.quaternary)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                TextField(
+                    "123456",
+                    text: $enteredCode
+                )
+                .keyboardType(.numberPad)
+                .textFieldStyle(.roundedBorder)
+                .multilineTextAlignment(.center)
+
+                if incorrectCode {
+
+                    Text("Incorrect pairing code")
+                        .foregroundStyle(.red)
+                        .font(.caption)
+
+                }
 
             }
 
             Text("""
-Verify that the six-digit code matches the code shown on the sender's device before accepting.
+Enter the six-digit code displayed on the sender's device.
 """)
             .font(.footnote)
             .foregroundStyle(.secondary)
@@ -105,13 +110,21 @@ Verify that the six-digit code matches the code shown on the sender's device bef
 
                 Button {
 
-                    peerManager.acceptIncomingRequest()
+                    if enteredCode == request.pairingCode {
 
-                    dismiss()
+                        peerManager.acceptIncomingRequest()
+
+                        dismiss()
+
+                    } else {
+
+                        incorrectCode = true
+
+                    }
 
                 } label: {
 
-                    Text("Accept")
+                    Text("Verify")
                         .frame(maxWidth: .infinity)
 
                 }

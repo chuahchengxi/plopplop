@@ -8,7 +8,8 @@ import SwiftUI
 import MultipeerConnectivity
 
 struct SettingsView: View {
-
+    @FocusState
+    private var nicknameFocused: Bool
     @EnvironmentObject
     private var settings: DeviceSettings
 
@@ -31,6 +32,8 @@ struct SettingsView: View {
                 nearbyDevicesSection
 
                 connectedDevicesSection
+                
+                pairingSection
 
                 disconnectSection
 
@@ -41,6 +44,11 @@ struct SettingsView: View {
                 nickname = settings.nickname
 
             }
+            .onTapGesture {
+
+                nicknameFocused = false
+
+            } 
 
         }
 
@@ -57,6 +65,7 @@ private extension SettingsView {
             )
             .textInputAutocapitalization(.words)
             .disableAutocorrection(true)
+            .focused($nicknameFocused)
             .onSubmit {
                 saveNickname()
             }
@@ -126,8 +135,6 @@ private extension SettingsView {
 
 }
 
-// MARK: - Nearby Devices
-
 private extension SettingsView {
 
     var nearbyDevicesSection: some View {
@@ -184,7 +191,41 @@ private extension SettingsView {
     }
 
 }
+private extension SettingsView {
 
+    var pairingSection: some View {
+
+        Group {
+
+            if peerManager.isWaitingForPairing {
+
+                Section("Waiting for Verification") {
+
+                    VStack(spacing: 16) {
+
+                        Text("Ask the other device to enter this code.")
+
+                        Text(peerManager.currentPairingCode ?? "")
+                            .font(.system(
+                                size: 42,
+                                weight: .bold,
+                                design: .monospaced
+                            ))
+
+                        ProgressView()
+
+                    }
+                    .frame(maxWidth: .infinity)
+
+                }
+
+            }
+
+        }
+
+    }
+
+}
 
 private extension SettingsView {
 
