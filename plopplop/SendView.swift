@@ -28,46 +28,27 @@ struct SendView: View {
                         ForEach(manager.discoveredPeers, id: \.self) { peer in
                             
                             HStack {
-                                
                                 VStack(alignment: .leading) {
-                                    
                                     Text(peer.displayName)
-                                    
                                 }
-                                
                                 Spacer()
-                                
                                 Button("Connect") {
-                                    
                                     if !manager.connectedPeers.contains(peer) {
-                                        
                                         manager.connect(to: peer)
                                     }
                                 }
-                                
                             }
-                            
                         }
-                        
                     }
-                    
                 }
                 Section("Connected") {
-                    
                     if manager.connectedPeers.isEmpty {
-                        
                         Text("Not connected")
-                        
                     } else {
-                        
                         ForEach(manager.connectedPeers, id: \.self) { peer in
-                            
                             Label(peer.displayName, systemImage: "checkmark.circle.fill")
-                            
                         }
-                        
                     }
-                    
                 }
                 Section("Note") {
                     TextField("Title", text: $title)
@@ -92,9 +73,7 @@ struct SendView: View {
                             content: content,
                             dateCreated: Date()
                         )
-                        
                         manager.send(note: note)
-                        
                         title = ""
                         content = ""
                     }
