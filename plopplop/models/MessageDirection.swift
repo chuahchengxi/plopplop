@@ -10,22 +10,17 @@ import Foundation
 import SwiftData
 
 enum MessageDirection: String, Codable {
-
     case sent
     case received
 }
-
 @Model
 final class ChatMessage {
-
     @Attribute(.unique)
     var id: UUID
-
     var text: String
     var senderNickname: String
     var direction: MessageDirection
     var createdAt: Date
-
     init(
         text: String,
         senderNickname: String,

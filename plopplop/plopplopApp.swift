@@ -9,18 +9,12 @@ import SwiftData
 
 @main
 struct PlopPlopApp: App {
-
-    @StateObject
-    private var peerManager = PeerManager()
-
+    @StateObject private var peerManager = PeerManager()
     var body: some Scene {
-
         WindowGroup {
-
             RootView()
                 .environmentObject(peerManager)
         }
-
         .modelContainer(
             for: [
                 Draft.self,

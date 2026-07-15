@@ -8,17 +8,13 @@ import SwiftUI
 import SwiftData
 
 struct HomeView: View {
-
     @Query(
         sort: \Draft.updatedAt,
         order: .reverse
     )
     private var drafts: [Draft]
-
     var body: some View {
-
         NavigationStack {
-
             List {
                 if drafts.isEmpty {
                     ContentUnavailableView(
@@ -48,7 +44,6 @@ struct HomeView: View {
                     }
                 }
             }
-
             .navigationTitle("plopplop")
         }
     }

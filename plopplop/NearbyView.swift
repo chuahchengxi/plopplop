@@ -9,30 +9,19 @@
 import SwiftUI
 import MultipeerConnectivity
 struct NearbyView: View {
-
-    @EnvironmentObject
-    private var peerManager: PeerManager
-
+    @EnvironmentObject private var peerManager: PeerManager
     var body: some View {
-
         NavigationStack {
-
             List {
-
                 Section("Connected") {
-
                     if peerManager.connectedPeers.isEmpty {
-
                         Text("No connected peers")
                             .foregroundStyle(.secondary)
-
                     } else {
-
                         ForEach(
                             peerManager.connectedPeers,
                             id: \.self
                         ) { peer in
-
                             Label(
                                 peer.displayName,
                                 systemImage: "checkmark.circle.fill"
@@ -40,29 +29,19 @@ struct NearbyView: View {
                         }
                     }
                 }
-
                 Section("Nearby") {
-
                     if peerManager.discoveredPeers.isEmpty {
-
                         Text("Searching...")
                             .foregroundStyle(.secondary)
-
                     } else {
-
                         ForEach(
                             peerManager.discoveredPeers,
                             id: \.self
                         ) { peer in
-
                             HStack {
-
                                 Text(peer.displayName)
-
                                 Spacer()
-
                                 Button("Connect") {
-
                                     peerManager.invite(
                                         peer: peer
                                     )
@@ -72,7 +51,6 @@ struct NearbyView: View {
                     }
                 }
             }
-
             .navigationTitle("Nearby")
         }
     }

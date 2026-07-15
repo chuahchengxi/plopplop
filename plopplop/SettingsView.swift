@@ -10,28 +10,18 @@ import SwiftUI
 import SwiftData
 
 struct SettingsView: View {
-
-    @Query
-    private var settings: [DeviceSettings]
-
+    @Query private var settings: [DeviceSettings]
     var body: some View {
-
         NavigationStack {
-
             Form {
-
                 if let settings = settings.first {
-
                     Section("Profile") {
-
                         TextField(
                             "Nickname",
                             text: Bindable(settings).nickname
                         )
                     }
-
                     Section("Discovery") {
-
                         Toggle(
                             "Discoverable",
                             isOn: Bindable(settings).isDiscoverable
@@ -39,7 +29,6 @@ struct SettingsView: View {
                     }
                 }
             }
-
             .navigationTitle("Settings")
         }
     }

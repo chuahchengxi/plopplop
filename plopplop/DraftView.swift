@@ -8,31 +8,20 @@ import SwiftUI
 import SwiftData
 
 struct DraftView: View {
-
-    @Environment(\.modelContext)
-    private var modelContext
-
+    @Environment(\.modelContext) private var modelContext
     @Query(
         sort: \Draft.updatedAt,
         order: .reverse
     )
     private var drafts: [Draft]
-
-    @State
-    private var selectedDraft: Draft?
-
-    @State
-    private var showingNewDraft = false
-
+    @State private var selectedDraft: Draft?
+@State private var showingNewDraft = false
     var body: some View {
-
         NavigationSplitView {
-
             List(
                 drafts,
                 selection: $selectedDraft
             ) { draft in
-
                 Text(
                     draft.title.isEmpty
                     ? "Untitled"
@@ -40,19 +29,12 @@ struct DraftView: View {
                 )
                 .tag(draft)
             }
-
             .navigationTitle("Drafts")
-
             .toolbar {
-
                 ToolbarItem {
-
                     Button {
-
                         createDraft()
-
                     } label: {
-
                         Image(systemName: "plus")
                     }
                 }
@@ -65,9 +47,7 @@ struct DraftView: View {
                 DraftEditorView(
                     draft: selectedDraft
                 )
-
             } else {
-
                 ContentUnavailableView(
                     "Select a Draft",
                     systemImage: "square.and.pencil"
@@ -75,13 +55,9 @@ struct DraftView: View {
             }
         }
     }
-
     private func createDraft() {
-
         let draft = Draft()
-
         modelContext.insert(draft)
-
         selectedDraft = draft
     }
 }

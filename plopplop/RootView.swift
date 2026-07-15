@@ -9,49 +9,34 @@ import SwiftData
 
 struct RootView: View {
 
-    @Environment(\.modelContext)
-    private var modelContext
-
-    @EnvironmentObject
-    private var peerManager: PeerManager
-
-    @Query
-    private var settings: [DeviceSettings]
-
+    @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var peerManager: PeerManager
+    @Query private var settings: [DeviceSettings]
     var body: some View {
-
         TabView {
-
             HomeView()
                 .tabItem {
-
                     Label(
                         "Home",
                         systemImage: "house"
                     )
                 }
-
             DraftView()
                 .tabItem {
-
                     Label(
                         "Draft",
                         systemImage: "square.and.pencil"
                     )
                 }
-
             NearbyView()
                 .tabItem {
-
                     Label(
                         "Nearby",
                         systemImage: "person.2"
                     )
                 }
-
             SettingsView()
                 .tabItem {
-
                     Label(
                         "Settings",
                         systemImage: "gear"
@@ -64,20 +49,14 @@ struct RootView: View {
             setup()
         }
     }
-
     private func setup() {
-
         if settings.isEmpty {
-
             let settings = DeviceSettings()
-
             modelContext.insert(settings)
         }
-
         peerManager.configure(
             modelContext: modelContext
         )
-
         peerManager.start()
     }
 }

@@ -8,16 +8,12 @@
 
 import Foundation
 import SwiftData
-
 @Model
 final class DeviceSettings {
-
     @Attribute(.unique)
     var id: UUID
-
     var nickname: String
     var isDiscoverable: Bool
-
     init(
         nickname: String = "Anonymous",
         isDiscoverable: Bool = true

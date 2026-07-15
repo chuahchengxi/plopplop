@@ -11,16 +11,10 @@ import SwiftData
 
 @Model
 final class PeerRecord {
-
-    @Attribute(.unique)
-    var id: UUID
-
-    @Attribute(.unique)
-    var peerID: String
-
+    @Attribute(.unique) var id: UUID
+    @Attribute(.unique) var peerID: String
     var nickname: String
     var lastSeen: Date
-
     init(
         peerID: String,
         nickname: String

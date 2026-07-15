@@ -9,15 +9,12 @@
 import Foundation
 
 enum PeerPayload: Codable {
-
     case intro(nickname: String)
-
     case draft(
         id: UUID,
         title: String,
         body: String
     )
-
     case message(
         text: String,
         senderNickname: String
