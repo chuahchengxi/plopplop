@@ -17,6 +17,8 @@ struct CanvasTestView: View {
                     CanvasObject(
                         x: 150,
                         y: 200,
+                        width: 200,
+                        height: 80,
                         type: "text",
                         text: "Physics"
                     ),
@@ -24,6 +26,8 @@ struct CanvasTestView: View {
                     CanvasObject(
                         x: 500,
                         y: 300,
+                        width: 300,
+                        height: 400,
                         type: "pdf",
                         file: CanvasFile(
                             fileName: "Test.pdf",

@@ -11,9 +11,9 @@ struct CanvasView: View {
 
     @State private var canvasOffset: CGSize = .zero
     @State private var zoom: CGFloat = 1
-
     @State private var dragStartOffset: CGSize?
     @State private var zoomStart: CGFloat?
+    @State private var selectedObjectID: UUID?
 
     var body: some View {
         GeometryReader { geometry in
@@ -24,8 +24,12 @@ struct CanvasView: View {
                 ZStack {
                     ForEach(workspace.objects) { object in
                         CanvasObjectView(
-                            object: object,
-                            zoom: zoom
+                            object:object,
+                            zoom: zoom,
+                            isSelected: selectedObjectID == object.id,
+                            onSelect: {
+                                selectedObjectID = object.id
+                            }
                         )
                     }
                 }

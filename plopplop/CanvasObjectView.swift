@@ -9,20 +9,30 @@ import SwiftUI
 struct CanvasObjectView: View {
     let object: CanvasObject
     let zoom: CGFloat
+    let isSelected: Bool
+    let onSelect: () -> Void
 
     @State private var dragStartPosition: CGPoint?
-
     var body: some View {
         CanvasObjectContent(object: object)
             .frame(
-                width: objectWidth,
-                height: objectHeight
+                width: object.width,
+                height: object.height
             )
+            .overlay {
+                if isSelected {
+                    Rectangle()
+                        .stroke(.blue, lineWidth: 2)
+                }
+            }
             .contentShape(Rectangle())
             .position(
                 x: object.x,
                 y: object.y
             )
+            .onTapGesture {
+                onSelect()
+            }
             .gesture(
                 DragGesture()
                     .onChanged { value in
@@ -45,13 +55,5 @@ struct CanvasObjectView: View {
                         dragStartPosition = nil
                     }
             )
-    }
-
-    private var objectWidth: CGFloat {
-        object.type == "pdf" ? 300 : 200
-    }
-
-    private var objectHeight: CGFloat {
-        object.type == "pdf" ? 400 : 80
     }
 }
