@@ -19,59 +19,62 @@ struct CanvasView: View {
         GeometryReader { geometry in
             ZStack {
                 Color.gray.opacity(0.1)
-                    .contentShape(Rectangle())
-                    .gesture(
-                        DragGesture()
-                            .onChanged { value in
-                                if dragStartOffset == nil {
-                                    dragStartOffset = canvasOffset
-                                }
+                    .ignoresSafeArea()
 
-                                canvasOffset = CGSize(
-                                    width: dragStartOffset!.width
-                                        + value.translation.width,
-                                    height: dragStartOffset!.height
-                                        + value.translation.height
-                                )
-                            }
-                            .onEnded { _ in
-                                dragStartOffset = nil
-                            }
-                    )
-                    .simultaneousGesture(
-                        MagnificationGesture()
-                            .onChanged { value in
-                                if zoomStart == nil {
-                                    zoomStart = zoom
-                                }
-
-                                zoom = min(
-                                    max(
-                                        zoomStart! * value,
-                                        0.5
-                                    ),
-                                    3
-                                )
-                            }
-                            .onEnded { _ in
-                                zoomStart = nil
-                            }
-                    )
-
-                ForEach(workspace.objects) { object in
-                    CanvasObjectView(
-                        object: object,
-                        zoom: zoom
-                    )
+                ZStack {
+                    ForEach(workspace.objects) { object in
+                        CanvasObjectView(
+                            object: object,
+                            zoom: zoom
+                        )
+                    }
                 }
+                .frame(
+                    width: geometry.size.width,
+                    height: geometry.size.height
+                )
+                .scaleEffect(zoom)
+                .offset(canvasOffset)
             }
-            .frame(
-                width: geometry.size.width,
-                height: geometry.size.height
+            .contentShape(Rectangle())
+            .gesture(
+                DragGesture()
+                    .onChanged { value in
+                        if dragStartOffset == nil {
+                            dragStartOffset = canvasOffset
+                        }
+
+                        canvasOffset = CGSize(
+                            width: dragStartOffset!.width
+                                + value.translation.width,
+
+                            height: dragStartOffset!.height
+                                + value.translation.height
+                        )
+                    }
+                    .onEnded { _ in
+                        dragStartOffset = nil
+                    }
             )
-            .scaleEffect(zoom)
-            .offset(canvasOffset)
+            .simultaneousGesture(
+                MagnificationGesture()
+                    .onChanged { value in
+                        if zoomStart == nil {
+                            zoomStart = zoom
+                        }
+
+                        zoom = min(
+                            max(
+                                zoomStart! * value,
+                                0.5
+                            ),
+                            3
+                        )
+                    }
+                    .onEnded { _ in
+                        zoomStart = nil
+                    }
+            )
         }
-        .clipped()
     }
 }

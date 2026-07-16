@@ -14,6 +14,11 @@ struct CanvasObjectView: View {
 
     var body: some View {
         CanvasObjectContent(object: object)
+            .frame(
+                width: objectWidth,
+                height: objectHeight
+            )
+            .contentShape(Rectangle())
             .position(
                 x: object.x,
                 y: object.y
@@ -40,5 +45,13 @@ struct CanvasObjectView: View {
                         dragStartPosition = nil
                     }
             )
+    }
+
+    private var objectWidth: CGFloat {
+        object.type == "pdf" ? 300 : 200
+    }
+
+    private var objectHeight: CGFloat {
+        object.type == "pdf" ? 400 : 80
     }
 }
