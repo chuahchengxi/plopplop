@@ -20,7 +20,10 @@ struct PlopPlopApp: App {
                 Draft.self,
                 DeviceSettings.self,
                 PeerRecord.self,
-                ChatMessage.self
+                ChatMessage.self,
+                Workspace.self,
+                CanvasObject.self,
+                CanvasFile.self
             ]
         )
     }

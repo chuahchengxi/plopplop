@@ -42,6 +42,10 @@ struct RootView: View {
                         systemImage: "gear"
                     )
                 }
+            CanvasTestView()
+                .tabItem{
+                    Label("Test",systemImage: "gear")
+                }
         }
 
         .task {

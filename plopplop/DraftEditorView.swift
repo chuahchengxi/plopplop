@@ -14,19 +14,19 @@ struct DraftEditorView: View {
     var draft: Draft
 
     var body: some View {
-
+        
         Form {
-
+            
             Section("Title") {
-
+                
                 TextField(
                     "Title",
                     text: $draft.title
                 )
             }
-
+            
             Section("Body") {
-
+                
                 TextEditor(
                     text: $draft.body
                 )
@@ -35,6 +35,7 @@ struct DraftEditorView: View {
                 )
             }
         }
+
 
         .navigationTitle("Edit Draft")
 
