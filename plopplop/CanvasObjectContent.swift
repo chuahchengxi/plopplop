@@ -53,11 +53,17 @@ struct CanvasObjectContent: View {
                 }
 
             } else if object.type == "ink" {
-                InkView(points: inkPoints)
+                InkView(
+                    points: inkPoints,
+                    color: InkColor(
+                        rawValue: object.inkColor
+                    )?.color ?? .black
+                )
                     .frame(
                         maxWidth: .infinity,
                         maxHeight: .infinity
                     )
+
 
             } else {
                 Circle()
@@ -105,6 +111,7 @@ struct PDFKitView: UIViewRepresentable {
 
 struct InkView: View {
     let points: [InkPoint]
+    let color: Color
 
     var body: some View {
         Canvas { context, size in
@@ -132,7 +139,7 @@ struct InkView: View {
 
             context.stroke(
                 path,
-                with: .color(.black),
+                with: .color(color),
                 style: StrokeStyle(
                     lineWidth: 4,
                     lineCap: .round,

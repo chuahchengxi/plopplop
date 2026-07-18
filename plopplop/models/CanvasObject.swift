@@ -23,6 +23,7 @@ final class CanvasObject {
     var text: String
 
     var pointsData: Data?
+    var inkColor: String
 
     init(
         id: UUID = UUID(),
@@ -49,5 +50,6 @@ final class CanvasObject {
         self.text = text
 
         self.pointsData = pointsData
+        self.inkColor = "black"
     }
 }
