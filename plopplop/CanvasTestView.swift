@@ -34,6 +34,15 @@ struct CanvasTestView: View {
                             fileType: "pdf",
                             data: createTestPDF()
                         )
+                    ),
+                    
+                    CanvasObject(
+                        x: 300,
+                        y: 500,
+                        width: 300,
+                        height: 200,
+                        type: "ink",
+                        pointsData: createTestInk()
                     )
                 ]
             )
@@ -83,5 +92,16 @@ struct CanvasTestView: View {
                 ]
             )
         }
+    }
+    private func createTestInk() -> Data {
+        let points = [
+            InkPoint(x: 20, y: 100),
+            InkPoint(x: 50, y: 80),
+            InkPoint(x: 80, y: 120),
+            InkPoint(x: 110, y: 60),
+            InkPoint(x: 140, y: 100)
+        ]
+
+        return (try? JSONEncoder().encode(points)) ?? Data()
     }
 }

@@ -11,10 +11,14 @@ struct CanvasObjectView: View {
     let zoom: CGFloat
     let isSelected: Bool
     let onSelect: () -> Void
-
+    @State private var resizeStartSize: CGSize?
     @State private var dragStartPosition: CGPoint?
     var body: some View {
-        CanvasObjectContent(object: object)
+        CanvasObjectContent(
+            object: object,
+            width: object.width,
+            height: object.height
+        )
             .frame(
                 width: object.width,
                 height: object.height
@@ -23,6 +27,8 @@ struct CanvasObjectView: View {
                 if isSelected {
                     Rectangle()
                         .stroke(.blue, lineWidth: 2)
+                    
+                    resizeHandle
                 }
             }
             .contentShape(Rectangle())
@@ -42,17 +48,57 @@ struct CanvasObjectView: View {
                                 y: object.y
                             )
                         }
-
+                        
                         object.x =
-                            dragStartPosition!.x
-                            + value.translation.width / zoom
-
+                        dragStartPosition!.x
+                        + value.translation.width / zoom
+                        
                         object.y =
-                            dragStartPosition!.y
-                            + value.translation.height / zoom
+                        dragStartPosition!.y
+                        + value.translation.height / zoom
                     }
                     .onEnded { _ in
                         dragStartPosition = nil
+                    }
+            )
+    }
+    
+    var resizeHandle: some View {
+        Circle()
+            .fill(.white)
+            .frame(width: 16, height: 16)
+            .overlay {
+                Circle()
+                    .stroke(.blue, lineWidth: 2)
+            }
+            .offset(
+                x: object.width / 2,
+                y: object.height / 2
+            )
+            .gesture(
+                DragGesture()
+                    .onChanged { value in
+                        if resizeStartSize == nil {
+                            resizeStartSize = CGSize(
+                                width: object.width,
+                                height: object.height
+                            )
+                        }
+                        
+                        object.width = max(
+                            80,
+                            resizeStartSize!.width
+                            + value.translation.width / zoom
+                        )
+                        
+                        object.height = max(
+                            50,
+                            resizeStartSize!.height
+                            + value.translation.height / zoom
+                        )
+                    }
+                    .onEnded { _ in
+                        resizeStartSize = nil
                     }
             )
     }

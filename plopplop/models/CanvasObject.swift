@@ -22,6 +22,8 @@ final class CanvasObject {
     var type: String
     var text: String
 
+    var pointsData: Data?
+
     init(
         id: UUID = UUID(),
         x: Double = 0,
@@ -30,9 +32,11 @@ final class CanvasObject {
         height: Double = 80,
         type: String = "text",
         text: String = "",
-        file: CanvasFile? = nil
+        file: CanvasFile? = nil,
+        pointsData: Data? = nil
     ) {
         self.id = id
+
         self.x = x
         self.y = y
 
@@ -43,5 +47,7 @@ final class CanvasObject {
 
         self.type = type
         self.text = text
+
+        self.pointsData = pointsData
     }
 }
