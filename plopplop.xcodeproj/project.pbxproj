@@ -268,7 +268,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = plopplop/Info.plist;
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "$(MARKETING_VERSION)";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = 1.0;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -302,7 +302,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = plopplop/Info.plist;
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "$(MARKETING_VERSION)";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = 1.0;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
