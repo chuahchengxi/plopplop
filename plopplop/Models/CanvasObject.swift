@@ -25,6 +25,10 @@ final class CanvasObject {
     var pointsData: Data?
     var inkColor: String
 
+    // Defaults keep SwiftData lightweight migration happy for existing stores.
+    var strokeWidth: Double = 4
+    var opacity: Double = 1
+
     init(
         id: UUID = UUID(),
         x: Double = 0,
@@ -34,7 +38,10 @@ final class CanvasObject {
         type: String = "text",
         text: String = "",
         file: CanvasFile? = nil,
-        pointsData: Data? = nil
+        pointsData: Data? = nil,
+        inkColor: String = "black",
+        strokeWidth: Double = 4,
+        opacity: Double = 1
     ) {
         self.id = id
 
@@ -50,6 +57,8 @@ final class CanvasObject {
         self.text = text
 
         self.pointsData = pointsData
-        self.inkColor = "black"
+        self.inkColor = inkColor
+        self.strokeWidth = strokeWidth
+        self.opacity = opacity
     }
 }

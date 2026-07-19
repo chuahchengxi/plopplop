@@ -5,6 +5,7 @@
 //  Created by cheng xi on 16/7/26.
 //
 import SwiftUI
+import UIKit
 import PDFKit
 
 struct CanvasObjectContent: View {
@@ -52,12 +53,27 @@ struct CanvasObjectContent: View {
                         .allowsHitTesting(false)
                 }
 
+            } else if object.type == "image" {
+                if let data = object.file?.data,
+                   let uiImage = UIImage(data: data) {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(
+                            maxWidth: .infinity,
+                            maxHeight: .infinity
+                        )
+                        .allowsHitTesting(false)
+                }
+
             } else if object.type == "ink" {
                 InkView(
                     points: inkPoints,
                     color: InkColor(
                         rawValue: object.inkColor
-                    )?.color ?? .black
+                    )?.color ?? .black,
+                    lineWidth: object.strokeWidth,
+                    opacity: object.opacity
                 )
                     .frame(
                         maxWidth: .infinity,
@@ -123,6 +139,8 @@ struct PDFKitView: UIViewRepresentable {
 struct InkView: View {
     let points: [InkPoint]
     let color: Color
+    var lineWidth: Double = 4
+    var opacity: Double = 1
 
     var body: some View {
         Canvas { context, size in
@@ -150,9 +168,9 @@ struct InkView: View {
 
             context.stroke(
                 path,
-                with: .color(color),
+                with: .color(color.opacity(opacity)),
                 style: StrokeStyle(
-                    lineWidth: 4,
+                    lineWidth: lineWidth,
                     lineCap: .round,
                     lineJoin: .round
                 )

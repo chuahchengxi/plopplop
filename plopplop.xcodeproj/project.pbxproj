@@ -268,6 +268,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = plopplop/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Used to scan documents directly onto the canvas.";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "This app discovers nearby devices to share notes.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -302,6 +303,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = plopplop/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Used to scan documents directly onto the canvas.";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "This app discovers nearby devices to share notes.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
