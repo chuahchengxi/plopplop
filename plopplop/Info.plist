@@ -5,6 +5,7 @@
 	<key>NSBonjourServices</key>
 	<array>
 		<string>_plopplop._tcp</string>
+		<string>_plopplop._udp</string>
 	</array>
 </dict>
 </plist>
