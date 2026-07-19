@@ -54,8 +54,13 @@ final class PencilDrawingView: UIView {
 
     var onPoint: ((CGPoint) -> Void)?
     var onEnded: (() -> Void)?
+    var requiresPencil = false
 
     private var isDrawing = false
+
+    private func isDrawingTouch(_ touch: UITouch) -> Bool {
+        requiresPencil ? touch.type == .pencil : true
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -76,7 +81,7 @@ final class PencilDrawingView: UIView {
             return
         }
 
-        guard touch.type == .pencil else {
+        guard isDrawingTouch(touch) else {
             return
         }
 
@@ -99,7 +104,7 @@ final class PencilDrawingView: UIView {
             return
         }
 
-        guard touch.type == .pencil else {
+        guard isDrawingTouch(touch) else {
             return
         }
 

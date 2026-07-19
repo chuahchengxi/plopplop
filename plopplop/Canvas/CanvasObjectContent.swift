@@ -95,7 +95,14 @@ struct PDFKitView: UIViewRepresentable {
         let pdfView = PDFView()
 
         pdfView.document = document
+        // Show the whole page aspect-fit inside the frame instead of
+        // fitting to width (which clips the bottom of taller pages).
+        pdfView.displayMode = .singlePage
+        pdfView.displayDirection = .vertical
         pdfView.autoScales = true
+        pdfView.minScaleFactor = 0.1
+        pdfView.maxScaleFactor = 5
+        pdfView.backgroundColor = .clear
         pdfView.isUserInteractionEnabled = false
 
         return pdfView
@@ -105,7 +112,11 @@ struct PDFKitView: UIViewRepresentable {
         _ pdfView: PDFView,
         context: Context
     ) {
-        pdfView.document = document
+        if pdfView.document !== document {
+            pdfView.document = document
+        }
+        // Re-fit after SwiftUI lays out the final frame.
+        pdfView.autoScales = true
     }
 }
 

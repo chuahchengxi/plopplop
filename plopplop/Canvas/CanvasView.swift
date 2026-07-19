@@ -93,7 +93,31 @@ struct CanvasView: View {
                         zoomStart = nil
                     }
             )
+            .overlay(alignment: .top) {
+                modeToolbar
+            }
         }
+    }
+
+    private var modeToolbar: some View {
+        HStack(spacing: 12) {
+            Button {
+                drawingMode.toggle()
+                selectedObjectID = nil
+            } label: {
+                Label(
+                    drawingMode ? "Drawing" : "Select",
+                    systemImage: drawingMode
+                        ? "pencil.tip"
+                        : "hand.tap"
+                )
+                .font(.subheadline.weight(.semibold))
+                .padding(.horizontal, 14)
+                .padding(.vertical, 8)
+                .background(.ultraThinMaterial, in: Capsule())
+            }
+        }
+        .padding(.top, 8)
     }
     private func finishDrawing() {
         guard currentPoints.count > 1 else {
