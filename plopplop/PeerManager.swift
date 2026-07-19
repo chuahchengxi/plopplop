@@ -139,17 +139,17 @@ final class PeerManager: NSObject, ObservableObject {
         browser?.delegate = self
         
         browser?.startBrowsingForPeers()
-        
+        print("✅ Browsing started")
         isBrowsing = true
-        
+
     }
     
     func stopBrowsing() {
         
         browser?.stopBrowsingForPeers()
-        
+
         browser = nil
-        print("✅ Browsing started")
+        print("🛑 Browsing stopped")
         nearbyPeers.removeAll()
         
         isBrowsing = false
